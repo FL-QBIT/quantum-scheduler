@@ -206,7 +206,7 @@ class FeatureExtractor:
 
         # Feature 7: priority level (120 = default, lower = higher priority)
         priority = stat.get('priority', 120)
-        f7 = priority / 139.0  # normalise to max priority value
+        f7 = max(0.0, min(priority / 139.0, 1.0))  # normalise to max priority value
 
         # Feature 8: thread count
         threads = status.get('threads', 1)

@@ -62,13 +62,14 @@ class RewardComputer:
                 prev  = self.prev_wait_times.get(pid, wait_time)
                 delta = wait_time - prev
                 self.prev_wait_times[pid] = wait_time
-                delta_waits.append(delta)
+                # Only include PIDs that actually got scheduled
+                if delta > 0:
+                    delta_waits.append(delta)
             except:
                 continue
-
+        # Need at least 2 active PIDs to measure fairness
         if len(delta_waits) < 2:
-            return 1.0
-
+            return 1.0   # assume fair if not enough data
         n    = len(delta_waits)
         s    = sum(delta_waits)
         sq_s = sum(w ** 2 for w in delta_waits)
